@@ -4,7 +4,7 @@ In this project we will be learning how to use containers in Dockerand how to au
 
 ## Docker
 
-Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software. To install docker for ubuntu, go to [DockerHub](https://hub.docker.com/) and install the Docker Desktop application. Doing this will allow you to use Docker commands inside ubuntu while the desktop app is running (and while you have the WSL 2 engine setting on, which it is by default). This is the only thing I needed to do to get docker working on my Windows 11 system.
+Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software. To install docker for ubuntu, type `sudo apt install docker.io` into your instance which will install the docker application. Doing this will allow you to use Docker commands inside ubuntu.
 
 ### Containerizing Applications
 
