@@ -13,8 +13,5 @@ RUN npm install
 # Copy the rest of the Angular application files
 COPY angular-site/wsu-hw-ng-main/ ./
 
-# Expose the application's port (optional, adjust based on your app's configuration)
-EXPOSE 4200
-
 # Start the Angular application
 CMD ["ng", "serve", "--host", "0.0.0.0"]
