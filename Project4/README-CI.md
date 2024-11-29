@@ -16,23 +16,21 @@ You could use a pre-made image from DockerHub, but for this we are going to be m
 
 This line selects what is called a "base image".
 
-- `WORKDIR /app`
+- `WORKDIR /usr/src/app/angular-site`
 
 
 
-- `COPY angular-site/wsu-hw-ng-main/package.json ./`
+- `COPY ~/angular-site/wsu-hw-ng-main /usr/src/app/angular-site`
+
+(The tilde (~) won't actually work in the file, instead use the full pwd to the wsu file.)
 
 
 
-- `RUN npm install`
+- `RUN npm install -g @angular/cli `
 
 
 
-- `COPY angular-site/wsu-hw-ng-main/ ./`
-
-
-
-- `EXPOSE 4200`
+- `Run npm install `
 
 
 
