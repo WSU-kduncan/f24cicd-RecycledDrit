@@ -5,7 +5,7 @@ FROM node:18-bullseye
 WORKDIR /usr/src/app/angular-site
 
 # Copy the Angular application files
-COPY /home/ubuntu/f24cicd-RecycledDrit/Project4/angular-site/wsu-hw-ng-main /usr/src/app/angular-site
+COPY angular-site/wsu-hw-ng-main /usr/src/app/angular-site
 
 # Install the global command line dependency for angular
 RUN npm install -g @angular/cli
