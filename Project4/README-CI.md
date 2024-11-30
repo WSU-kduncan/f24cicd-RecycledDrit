@@ -4,9 +4,13 @@ In this project we will be learning how to use containers in Dockerand how to au
 
 ## Docker
 
-Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software. To install docker for ubuntu, type `sudo apt install docker-ce` into your instance which will install the docker application. Doing this will allow you to use Docker commands inside ubuntu. However, your user might not have the permissions to use docker commands. You could work around this just by putting `sudo` in front of every command discussed from this point on, but instead you can add yourself to the docker group using the command `sudo usermod -aG docker [username]` which will give you access to the commands.
+Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software.
 
-### Containerizing Applications
+To install docker for ubuntu, first make sure your ubnutu isntance is up to date using `sudo apt update` and `sudo apt install curl apt-transport-https ca-certificates software-properties-common`. Then, because we are using the community edition of docker for ubuntu, type `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg` and `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` to allow downloads from that repository. Finally, run `sudo apt update` again and then type `sudo apt install docker-ce` into which will install the docker application.
+
+Doing this will allow you to use Docker commands inside ubuntu. However, your user might not have the permissions to use docker commands. You could work around this just by putting `sudo` in front of every command discussed from this point on, but instead you can add yourself to the docker group using the command `sudo usermod -aG docker [username]` which will give you access to the commands after you leave and re-enter your instance.
+
+## Containerizing Applications
 
 To begin creating your container, you first need a container image.An image is a set of prewritten instructions detailing code of your application, its dependencies, configuration files, etc that will be used during the creation of your image.
 
@@ -14,37 +18,48 @@ You could use a pre-made image from DockerHub, but for this we are going to be m
 
 - `FROM node:18-bullseye`
 
-This line selects what is called a "base image".
+This line selects what is called a "base image". A base image is an existing image that will function as your image's foundation. It will include thing like the opperating system and runtime environments.
 
 - `WORKDIR /usr/src/app/angular-site`
 
-This
+This line decides the working directory inside the contianer. The directory shown is where most ubuntu apps go by default, but sence node doesn't have this directory it will be created automatically.
 
 - `COPY angular-site/wsu-hw-ng-main /usr/src/app/angular-site`
 
-This copies the contents of our angular app and places them in same working directory we decided on earlier.
+This copies the contents of our angular app and places them in same working directory we decided on earlier. This will make it so our container actually has our app's files and they are in the proper place to be used.
 
 - `RUN npm install -g @angular/cli `
 
-This
+This installs the angular command line interface, allowing the use of the `ng` command. the `-g` flag means it will be installed globaly, letting the `ng` command work anywhere in the container.
 
-- `Run npm install `
+- `RUN npm install `
 
-This
+This command installs the dependencies listed in the `package.json` file of our app. Those being packages that are needed for the app to run correctly.
+
+- `RUN ng build`
+
+This line will build the application and compile it into an output directory to be received by a webserver.
 
 - `CMD ["ng", "serve", "--host", "0.0.0.0"]`
 
-This
+This line is a command that is set to run when the container is started. The command itself is one that will start the angular development server and allow it to be accessed from outside the container.
 
-Once
+Once you have completed this file, you will need to build the image. But before we can do that we have to set up our dockerhub account.
 
 ### DockerHub
 
+Dockerhub is a website that is used to store and share docker images. In order to use dockerhub we will need an account. Got to [dockerhub](https://hub.docker.com/explore) and create an account. Then click on repositories at the top of the page and click the create a repository button. Give it a name, decide whether it is private or public, and then create.
 
+Once you have done that go back to your instance and type `docker login` where you will be given a url and a code. Go to the url and type the code you were given and you will connect your instance to dockerhub, along with having a token generated for you that will let you login again without doing this.
+
+Now that you are connected to dockerhub and have a repository, go to the directory with your dockerfile and type the command `docker build -t [username]/[repository-name]:[tag]` while filling in your username, the name of your repository, and the tag that will be used to identify your image. Your image is now avalible on your machine to be used by you immediately and on your dockerhub repo for anyone to download (or only for you if its private). To make this image into a container type the command `docker run -p 4200:4200 [image-name]` where `-p 4200:4200` means to use port 4200 to access it from the browser at http://localhost:4200 if being run on your device or at http://[instance public ip]:4200 if you are hosting it on an instance. After the application is completely set up (it will tell you) hit ctrl+c three times to exit the app and go look at it at your http url.
 
 ## GitHub Actions
 
 
 
 ### Links
+
+[My Dockerhub Repo](https://hub.docker.com/r/recycleddirt/francis-ceg3120)
 [How to Use Docker](https://www.cherryservers.com/blog/install-docker-ubuntu)
+[Creating an Angular App in Docker](https://dev.to/rodrigokamada/creating-and-running-an-angular-application-in-a-docker-container-40mk)
