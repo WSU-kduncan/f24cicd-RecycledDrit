@@ -11,7 +11,7 @@ COPY angular-site/wsu-hw-ng-main /usr/src/app/angular-site
 RUN npm install -g @angular/cli
 
 # Install angular application dependencies
-Run npm install
+RUN npm install
 
 # Start the Angular application
 CMD ["ng", "serve", "--host", "0.0.0.0"]

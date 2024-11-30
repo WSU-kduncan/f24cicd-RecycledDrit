@@ -18,25 +18,25 @@ This line selects what is called a "base image".
 
 - `WORKDIR /usr/src/app/angular-site`
 
+This
 
+- `COPY angular-site/wsu-hw-ng-main /usr/src/app/angular-site`
 
-- `COPY ~/angular-site/wsu-hw-ng-main /usr/src/app/angular-site`
-
-(The tilde (~) won't actually work in the file, instead use the full pwd to the wsu file.)
-
-
+This copies the contents of our angular app and places them in same working directory we decided on earlier.
 
 - `RUN npm install -g @angular/cli `
 
-
+This
 
 - `Run npm install `
 
-
+This
 
 - `CMD ["ng", "serve", "--host", "0.0.0.0"]`
 
+This
 
+Once
 
 ### DockerHub
 
@@ -46,3 +46,5 @@ This line selects what is called a "base image".
 
 
 
+### Links
+[How to Use Docker](https://www.cherryservers.com/blog/install-docker-ubuntu)
