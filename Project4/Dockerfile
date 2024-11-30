@@ -13,5 +13,8 @@ RUN npm install -g @angular/cli
 # Install angular application dependencies
 RUN npm install
 
+# Build the angular application
+RUN ng build
+
 # Start the Angular application
 CMD ["ng", "serve", "--host", "0.0.0.0"]
