@@ -4,7 +4,7 @@ In this project we will be learning how to use containers in Dockerand how to au
 
 ## Docker
 
-Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software. To install docker for ubuntu, type `sudo apt install docker.io` into your instance which will install the docker application. Doing this will allow you to use Docker commands inside ubuntu. However, your user might not have the permissions to use docker commands. You could work around this just by putting `sudo` in front of every command discussed from this point on, but instead you can add yourself to the docker group using the command `sudo usermod -aG docker [username]` which will give you access to the commands.
+Docker is a cloud-based repository service that allows developers to share, store, and manage container images. A container being an idependent section of a system that contains everything needed to run a piece of software. To install docker for ubuntu, type `sudo apt install docker-ce` into your instance which will install the docker application. Doing this will allow you to use Docker commands inside ubuntu. However, your user might not have the permissions to use docker commands. You could work around this just by putting `sudo` in front of every command discussed from this point on, but instead you can add yourself to the docker group using the command `sudo usermod -aG docker [username]` which will give you access to the commands.
 
 ### Containerizing Applications
 
