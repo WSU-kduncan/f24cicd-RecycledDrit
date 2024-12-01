@@ -56,7 +56,11 @@ Now that you are connected to dockerhub and have a repository, go to the directo
 
 ## GitHub Actions
 
+GitHub Actions are a feature of GitHub that allows you to automate certain parts of your development. It uses custom created "workflows" that can be triggered by events like pushes, pulls, or errors.
 
+First, you will want to return to dockerhub and go to your account settings and click on Personal access tokens. These act as a replacement for your password in certain situations (like when you use `docker login`). Click generate new token, give it a description, set its expiration date, and choose the access permisions that someone logging in with this token (GitHub actions in this case) will have. Make the description and expiration whatever you want but set the permissions to Read & Write.
+
+Next you will want to set up some GitHub secrets. GitHub secrets are used to store information like that token you just made and use it to login to services for you. To make a secret go to the repository you want to make a secret for and go to the settings. Under security you will see secrets, select 
 
 ### Links
 
