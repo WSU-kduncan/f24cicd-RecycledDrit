@@ -22,7 +22,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.10.0 # uses other action
         with:
-          context: .
-          file: Project4/Dockerfile
+          context: Project4
           push: true
           tags: recycleddirt/francis-ceg3120:latest  # pushes the image to dockerhub repository
