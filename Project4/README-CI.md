@@ -1,6 +1,8 @@
 # Project 4
 
-In this project we will be learning how to use containers in Dockerand how to automate the process of updating what we make on DockerHub using GitHub Actions, which is called continuous integration.
+In this project we will be learning how to use containers in Docker and how to automate the process of updating what we make on DockerHub using GitHub Actions, which is called continuous integration.
+
+
 
 ## Docker
 
@@ -15,6 +17,7 @@ Doing this will allow you to use Docker commands inside ubuntu. However, your us
 To begin creating your container, you first need a container image.An image is a set of prewritten instructions detailing code of your application, its dependencies, configuration files, etc that will be used during the creation of your image.
 
 You could use a pre-made image from DockerHub, but for this we are going to be making our own. Create a file called `Dockerfile` and write the following lines:
+
 
 - `FROM node:18-bullseye`
 
@@ -44,7 +47,8 @@ This line will build the application and compile it into an output directory to 
 
 This line is a command that is set to run when the container is started. The command itself is one that will start the angular development server and allow it to be accessed from outside the container.
 
-Once you have completed this file, you will need to build the image. But before we can do that we have to set up our dockerhub account.
+
+Once you have completed this file, you will need to build the image. But before you can do that you have to set up your dockerhub account.
 
 ### DockerHub
 
@@ -52,20 +56,53 @@ Dockerhub is a website that is used to store and share docker images. In order t
 
 Once you have done that go back to your instance and type `docker login` where you will be given a url and a code. Go to the url and type the code you were given and you will connect your instance to dockerhub, along with having a token generated for you that will let you login again without doing this.
 
-Now that you are connected to dockerhub and have a repository, go to the directory with your dockerfile and type the command `docker build -t [username]/[repository-name]:[tag]` while filling in your username, the name of your repository, and the tag that will be used to identify your image. Your image is now avalible on your machine to be used by you immediately and on your dockerhub repo for anyone to download (or only for you if its private). To make this image into a container type the command `docker run -p 4200:4200 [image-name]` where `-p 4200:4200` means to use port 4200 to access it from the browser at http://localhost:4200 if being run on your device or at http://[instance public ip]:4200 if you are hosting it on an instance. After the application is completely set up (it will tell you) hit ctrl+c three times to exit the app and go look at it at your http url.
+Now that you are connected to dockerhub and have a repository, go to the directory with your dockerfile and type the command `docker build -t [your-username]/[your-repository-name]:[tag]` while filling in your username, the name of your repository, and the tag that will be used to identify your image. Your image is now avalible on your machine to be used by you immediately and on your dockerhub repo for anyone to download (or only for you if its private). To make this image into a container type the command `docker run -p 4200:4200 [image-name]` where `-p 4200:4200` means to use port 4200 to access it from the browser at http://localhost:4200 if being run on your device or at http://[instance public ip]:4200 if you are hosting it on an instance. After the application is completely set up (it will tell you) hit ctrl+c three times to exit the app and go look at it at your http url.
 
 ## GitHub Actions
 
 GitHub Actions are a feature of GitHub that allows you to automate certain parts of your development. It uses custom created "workflows" that can be triggered by events like pushes, pulls, or errors.
 
-First, you will want to return to dockerhub and go to your account settings and click on Personal access tokens. These act as a replacement for your password in certain situations (like when you use `docker login`). Click generate new token, give it a description, set its expiration date, and choose the access permisions that someone logging in with this token (GitHub actions in this case) will have. Make the description and expiration whatever you want but set the permissions to Read & Write.
+First, you will want to return to dockerhub and go to your account settings and click on Personal Access Tokens. These act as a replacement for your password in certain situations (like when you use `docker login`). Click generate new token, give it a description, set its expiration date, and choose the access permisions that someone logging in with this token (GitHub actions in this case) will have. Make the description and expiration whatever you want but set the permissions to Read & Write.
 
 Next you will want to set up some GitHub secrets. GitHub secrets are used to store information like that token you just made and use it to login to services for you. To make a secret go to the repository you want to make a secret for and go to the settings. Under security you will see secrets and variables, select that and then the actions section that will appear. You will new see repository secrets, make two repository secrets called DOCKER_USERNAME AND DOCKER_TOKEN and put their respective values in the secret.
 
-Now that you have your secrets, its time to set up an workflow that uses them.
+Now that you have your secrets, its time to set up an workflow that uses them. In the root directory of your GitHub repository make a directory called `.github` and inside of that directory make another called `workflows`. This is where GitHub will check for any actions that your repository is going to use. Make a `.yml` file and enter this:
+
+```yml
+name: docker_build_push # name of the action
+
+on:
+  push:
+    branches: # what causes the action to start (a push to the main branch)
+      - main
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 # checks the code in the repository
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2 # uses the username and token secrets to login to dockerhub
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6.10.0
+        with:
+          context: [directory that has your Dockerfile]
+          push: true
+          tags: [your-username]/[your-repository-name]:latest  # pushes the image to dockerhub repository
+```
+
+This workflow says that when a push is made to the main branch a job called `build-push` will run using the latest version of ubuntu. This job will use the action `actions/checkout@v2` to check the code from the repository, then it will login to DockerHub using the action `docker/login-action@v2` along with your DOCKER_USERNAME and DOCKER_TOKEN secrets. Finally, using the action `docker/build-push-action@v6.10.0` it will use your Dockerfile to build the image and then push it to your DockerHub repository. And now it will do this every time you make a push to your main repo branch.
 
 ### Links
 
 [My Dockerhub Repo](https://hub.docker.com/r/recycleddirt/francis-ceg3120)
 [How to Use Docker](https://www.cherryservers.com/blog/install-docker-ubuntu)
+[GitHub Action Commands](https://docs.docker.com/build/ci/github-actions/)
 [Creating an Angular App in Docker](https://dev.to/rodrigokamada/creating-and-running-an-angular-application-in-a-docker-container-40mk)
