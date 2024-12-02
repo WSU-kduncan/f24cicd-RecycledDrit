@@ -2,7 +2,7 @@
 
 In this project we will be learning how to use containers in Docker and how to automate the process of updating what we make on DockerHub using GitHub Actions, which is called continuous integration.
 
-
+![CI-Diagram](CI-Diagram.jpeg)
 
 ## Docker
 
