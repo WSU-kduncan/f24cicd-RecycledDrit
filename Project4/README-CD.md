@@ -53,5 +53,3 @@ jobs:
           push: true
           tags: [your-username]/[your-repository-name]:latest  # pushes the image to dockerhub repository
 ```
-
-
