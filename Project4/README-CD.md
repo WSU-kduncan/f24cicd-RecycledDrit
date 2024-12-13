@@ -159,3 +159,29 @@ Now that we have our semantic versioning all automated, we can begin our continu
 Now you should have docker installed on your instance and after loging in with `docker login` you should be able to pull the angular-site image from your dockerhub repo using `docker pull [your-username]/[your-repository-name]:[what tag you want]` Make sure that your instance is able to run the container before we move on to the next step
 
 ### Bash Script
+
+In order to make a way for the angular site to be updated every time we make a new tag. There is no built-in way for us to do this, so we're going to have to write a bash script real quick. Make a new directory called `deployment` and make this script file in there:
+
+- `#!/bin/bash`
+
+The shebang line. Tells the system that this is bash and should be run like bash.
+
+- `docker stop [container-name]`
+
+Stops a running docker container with the specified name.
+
+- `docker pull [your-username]/[your-repository-name]:latest`
+
+Pulls your latest version of the image from docker hub so it can be used to make a container.
+
+- `docker run -d --name [container-name] --rm -p 4200:4200 [your-username]/[your-repository-name]:[what tag you want]`
+
+Creates a container in detached mode (`-d`) using your image and gives it the container name that the script will delete next time it is run (`--name`). Also specifies that the container will be removed when stopped (`--rm`) and what ports it will run on (`-p 4200:4200`).
+
+Run the script twice to make sure it works, once to make the named container, and the second time to make sure it gets replaced.
+
+### Webhooks
+
+Now just having the script won't be enough, because it cant run automaticaly by itself. To make the script run on a trigger we will need a new tool called a webhook. A webhook is an HTTP callback that sends real-time notifications about specific events. When an event occurs, the source application sends an HTTP request to a configured URL with event data. Using a webhook we will be able to cause the bash script to run when a tag push is made to one of our repositories.
+
+To download webhook onto your instance run `sudo apt install webhook` Once this is done, if you check the status of webhook with `systemctl` you will see it has an unmet condition. That condition being that `/etc/webhook.conf` does not exist. For webhook to work were are going to have to make that file, but not yet.
