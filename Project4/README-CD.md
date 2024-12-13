@@ -170,13 +170,17 @@ The shebang line. Tells the system that this is bash and should be run like bash
 
 Stops a running docker container with the specified name.
 
+- `docker rm [container-name]`
+
+Removes a stopped docker container with the specified name.
+
 - `docker pull [your-username]/[your-repository-name]:latest`
 
 Pulls your latest version of the image from docker hub so it can be used to make a container.
 
-- `docker run -d --name [container-name] --rm -p 4200:4200 [your-username]/[your-repository-name]:[what tag you want]`
+- `docker run -d --name [container-name] --restart always -p 4200:4200 [your-username]/[your-repository-name]:[what tag you want]`
 
-Creates a container in detached mode (`-d`) using your image and gives it the container name that the script will delete next time it is run (`--name`). Also specifies that the container will be removed when stopped (`--rm`) and what ports it will run on (`-p 4200:4200`).
+Creates a container in detached mode (`-d`) using your image and gives it the container name that the script will delete next time it is run (`--name`). Also specifies that the container will allways restart itself if the server goes down (`--restart always`) and what ports it will run on (`-p 4200:4200`).
 
 Run the script twice to make sure it works, once to make the named container, and the second time to make sure it gets replaced. Also be sure to run `chmod a+x [scriptname].sh` to make sure webhook will have execute permissions later.
 
