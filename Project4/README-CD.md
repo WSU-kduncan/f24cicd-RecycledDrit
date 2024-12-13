@@ -178,10 +178,26 @@ Pulls your latest version of the image from docker hub so it can be used to make
 
 Creates a container in detached mode (`-d`) using your image and gives it the container name that the script will delete next time it is run (`--name`). Also specifies that the container will be removed when stopped (`--rm`) and what ports it will run on (`-p 4200:4200`).
 
-Run the script twice to make sure it works, once to make the named container, and the second time to make sure it gets replaced.
+Run the script twice to make sure it works, once to make the named container, and the second time to make sure it gets replaced. Also be sure to run `chmod a+x [scriptname].sh` to make sure webhook will have execute permissions later.
 
 ### Webhooks
 
 Now just having the script won't be enough, because it cant run automaticaly by itself. To make the script run on a trigger we will need a new tool called a webhook. A webhook is an HTTP callback that sends real-time notifications about specific events. When an event occurs, the source application sends an HTTP request to a configured URL with event data. Using a webhook we will be able to cause the bash script to run when a tag push is made to one of our repositories.
 
-To download webhook onto your instance run `sudo apt install webhook` Once this is done, if you check the status of webhook with `systemctl` you will see it has an unmet condition. That condition being that `/etc/webhook.conf` does not exist. For webhook to work were are going to have to make that file, but not yet.
+To download webhook onto your instance run `sudo apt install webhook` Once this is done, if you check the status of webhook with `systemctl` you will see it has an unmet condition. That condition being that `/etc/webhook.conf` does not exist. For webhook to work by itself we're are going to have to make that file, but not yet. For now we are just going set up the webhook what we will later automate. Make a new file in `deployment` called `hooks.json` and write the following:
+
+```json
+[
+  {
+    "id": "redeploy-webhook",
+    "execute-command": "/path/to/script/[scriptname].sh",
+    "command-working-directory": "/path/to/deployment"
+  }
+]
+```
+
+The first line sets the id of the webhook, which will be used to call it later. The second line is what command the webhook will run when it is triggered, It has the path to our bash script to tell it that is the command that should be run. And the third line is the working directory that command will be executed in, that being the `deployment` directory that our script exists in.
+
+Now when you run the command `webhook -hooks /path/to/hooks.json -verbose` you will see the webhook come online and wait for a trigger. You can cause a trigger by going to http://[your-public-ip]:9000/hooks/redeploy-webhook which will activate the program, run the script, and update your docker container.
+
+But this still isn't automated.
