@@ -20,7 +20,7 @@ Is increased when backward-compatible bug fixes are introduced. These changes do
 
 In Project 4 (CI) we tagged all of our images with `latest`, meaning that none of the previous versions have been saved. This time, we will be using semantic versioning by using git tagging and updating our github action to use metadata to generate tags for our images.
 
-First we will want to begin tagging our commits using `git tag`. Just the command `git tag` will show you your existing git tags, of which we have none. While having a staged commit, using `git tag -am [tagname] "[message]"` will allow you to mark that commit with a git tag; more specificaly a semantic versioning number. Then after pushing the commit to your GitHub repository you will be able to find the tagged commit under the branches dropdown menu, and you will be able to look at this tagged version of the repo even after another commit is made (assuming its not made to the same tag).
+First we will want to begin tagging our commits using `git tag`. Just the command `git tag` will show you your existing git tags, of which we have none. Make a tag with the command `git tag -am [tagname] "[description"]` and then prepare a commit. Once you have a commit ready run the command `git push origin [tagname]` and should have pushed the tag to your GitHub repository. To check if it worked go to your repo and click on the button showing main branch, then click the tags tab and you should see your tagged commit there, forever preserved in that state.
 
 Now we are going to change our GitHub action to do this automatically for us. The action previously looked like this:
 
@@ -53,3 +53,5 @@ jobs:
           push: true
           tags: [your-username]/[your-repository-name]:latest  # pushes the image to dockerhub repository
 ```
+
+
