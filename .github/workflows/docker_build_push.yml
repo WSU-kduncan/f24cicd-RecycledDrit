@@ -30,6 +30,9 @@ jobs:
             type=semver,pattern={{.Major}} # This extracts the major version (e.g., v1)
             type=semver,pattern={{.Major}}.{{.Minor}} # This extracts the major and minor version (e.g., v1.2)
 
+      - name: Debug Tags
+        run: echo "Generated tags: ${{ steps.meta.outputs.tags }}"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.10.0 # uses other action
         with:
