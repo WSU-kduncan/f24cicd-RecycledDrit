@@ -144,4 +144,18 @@ Once your workflow has been updated, make a commit and tag it to see if it works
 
 ## Deployment
 
+Now that we have our semantic versioning all automated, we can begin our continuous deployment. We are going to have a AWS EC2 insance Running on a t2.medium using Ubuntu 24.04 with the public ip 34.192.160.4, and it will be hosting our `angular-site` with our container made in project 4. This means you will have to go through the process of setting up docker on an AWS instance. I have gone through this process in project 4 [(README-CI.md)](https://github.com/WSU-kduncan/f24cicd-RecycledDrit/blob/main/Project4/README-CI.md), but here is what to do as a reminder:
 
+1. Run `sudo apt update` and `sudo apt install curl apt-transport-https ca-certificates software-properties-common` to make sure your instance is up-to-date.
+
+2. Run the commands `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg` and `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null` to prepare downloads form the docker community edition repository.
+
+3. Run `sudo apt update` again to make sure updates took effect.
+
+4. Run `sudo apt install docker-ce` to install docker community edition.
+
+5. Run `sudo usermod -aG docker [username]` to add your user to the docker group.
+
+Now you should have docker installed on your instance and after loging in with `docker login` you should be able to pull the angular-site image from your dockerhub repo using `docker pull [your-username]/[your-repository-name]:[what tag you want]` Make sure that your instance is able to run the container before we move on to the next step
+
+### Bash Script
