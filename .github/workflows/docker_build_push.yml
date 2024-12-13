@@ -27,8 +27,8 @@ jobs:
           tags: |
             latest
             type=semver,pattern={{version}} # This will give you just the tag name (e.g., v1.2.3)
-            type=semver,pattern={{major}} # This extracts the major version (e.g., v1)
-            type=semver,pattern={{major}}.{{minor}} # This extracts the major and minor version (e.g., v1.2)
+            type=semver,pattern={{.Major}} # This extracts the major version (e.g., v1)
+            type=semver,pattern={{.Major}}.{{.Minor}} # This extracts the major and minor version (e.g., v1.2)
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.10.0 # uses other action
