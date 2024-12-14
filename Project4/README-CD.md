@@ -2,7 +2,7 @@
 
 This is a continuation on the contiuous integration that was done in Project 4. This time we will be doing continuous deployment, which will allow changes made to the code to be automatically applied to the user end.
 
-![CD-Diagram]()
+![CD-Diagram](CD-Diagram.jpeg)
 
 ## Semantic Versioning
 
@@ -229,7 +229,7 @@ The only lines we care about here are `ConditionPathExists=/etc/webhook.conf` an
 
 Restart webhooks by running `sudo systemctl daemon-reload` for the service file changes and then `sudo systemctl restart webhooks.service` for your new definition file to make sure our changes took effect.
 
-Now, when you push a new tag to your GitHub repository it will automatically cause your docker images to be pushed to dockerhub, re-make your container using the new image, and update the active web-server all by itself. The logs for using webhook this way can be seen by running `g`
+Now, when you push a new tag to your GitHub repository it will automatically cause your docker images to be pushed to dockerhub, re-make your container using the new image, and update the active web-server all by itself. The logs for using webhook this way can be seen by running `journalctl -u webhooks.service`
 
 ### Links
 
