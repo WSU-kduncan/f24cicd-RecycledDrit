@@ -188,7 +188,7 @@ Run the script twice to make sure it works, once to make the named container, an
 
 Now just having the script won't be enough, because it cant run automaticaly by itself. To make the script run on a trigger we will need a new tool called a webhook. A webhook is an HTTP callback that sends real-time notifications about specific events. When an event occurs, the source application sends an HTTP request to a configured URL with event data. Using a webhook we will be able to cause the bash script to run when a tag push is made to one of our repositories.
 
-To download webhook onto your instance run `sudo apt install webhook` Once this is done, if you check the status of webhook with `systemctl` you will see it has an unmet condition. That condition being that `/etc/webhook.conf` does not exist, but we won't worry about that yet. For now we are just going set up the webhook what we will later automate. Make a new file in `deployment` called `hooks.json` and write the following:
+To download webhook onto your instance run `sudo apt install webhook` Once this is done, if you check the status of webhook with `systemctl` you will see it has an unmet condition. That condition being that `/etc/webhook.conf` does not exist, but we won't worry about that yet. For now we are just going set up the webhook what we will later automate. Make a new "hook definition" file in `deployment` called `hooks.json` and write the following:
 
 ```json
 [
@@ -204,7 +204,7 @@ To download webhook onto your instance run `sudo apt install webhook` Once this 
 
 The first line sets the id of the webhook, which will be used to call it later. The second line is what command the webhook will run when it is triggered, It has the path to our bash script to tell it that is the command that should be run. And the third line is the working directory that command will be executed in, that being the `deployment` directory that our script exists in.
 
-Now when you run the command `webhook -hooks /path/to/hooks.json -verbose` you will see the webhook come online and wait for a trigger. You can cause a trigger by going to http://[your-public-ip]:9000/hooks/redeploy-webhook which will activate the program, run the script, and update your docker container.
+Now when you run the command `webhook -hooks /path/to/hooks.json -verbose` you will see the webhook come online and wait for a trigger. You can cause a trigger by going to http://[your-public-ip]:9000/hooks/redeploy-webhook which will activate the program, run the script, and update your docker container. When you have your webhook listening and you cause a trigger at the http address, you should see webhook reporting that it recived the HTTP request and triggered successfuly, along with the docker image being downloaded to your instance.
 
 But this still isn't automated, to do that we are going to have to go back to dockerhub (You could do something similar with github but I think using dockerhub for this situation is better i.e. the script won't be called before the tags can be pushed) and look at the "Webhooks" tab in your repository. Click in and you will see two boxes asking for a name and a url. Make the name whatever you want and make the url http://[your-public-ip]:9000/hooks/redeploy-webhook then hit the plus on the right. Now dockerhub will make the trigger with the webhook url every time a push is made to the repository.
 
@@ -223,6 +223,8 @@ ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf
 WantedBy=multi-user.target
 ```
 
-The only lines we care about here are `ConditionPathExists=/etc/webhook.conf` and `ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf` The first one is what is giving the unmet condition message, because by default webhook expects you to have your hooks in `/etc/webhook.conf`, which we don't. So change that part of the line to the path to your `hooks.json` file. It's the same thing with the second line change the default path to our custom one.
+The only lines we care about here are `ConditionPathExists=/etc/webhook.conf` and `ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf` The first one is what is giving the unmet condition message, because by default webhook expects you to have your hooks in `/etc/webhook.conf`, which we don't. So change that part of the line to the path to your `hooks.json` file. It's the same thing with the next line, change the default path to our custom one.
 
-Restart webhooks by running `sudo systemctl daemon-reload` and then `sudo systemctl restart webhooks.service` to make sure our changes took effect.
+Restart webhooks by running `sudo systemctl daemon-reload` for the service file changes and then `sudo systemctl restart webhooks.service` for your new definition file to make sure our changes took effect.
+
+Now, when you push a new tag to your GitHub repository it will automatically cause your docker images to be pushed to dockerhub, re-make your container using the new image, and update the active web-server all by itself.
