@@ -2,6 +2,8 @@
 
 This is a continuation on the contiuous integration that was done in Project 4. This time we will be doing continuous deployment, which will allow changes made to the code to be automatically applied to the user end.
 
+![CD-Diagram]()
+
 ## Semantic Versioning
 
 Semantic versioning is a system designed to show with version numbers what has changed in each new update for a piece of software. It uses a three-part version number format MAJOR.MINOR.PATCH, where:
@@ -227,4 +229,11 @@ The only lines we care about here are `ConditionPathExists=/etc/webhook.conf` an
 
 Restart webhooks by running `sudo systemctl daemon-reload` for the service file changes and then `sudo systemctl restart webhooks.service` for your new definition file to make sure our changes took effect.
 
-Now, when you push a new tag to your GitHub repository it will automatically cause your docker images to be pushed to dockerhub, re-make your container using the new image, and update the active web-server all by itself.
+Now, when you push a new tag to your GitHub repository it will automatically cause your docker images to be pushed to dockerhub, re-make your container using the new image, and update the active web-server all by itself. The logs for using webhook this way can be seen by running `g`
+
+### Links
+
+[My Dockerhub Repo](https://hub.docker.com/r/recycleddirt/francis-ceg3120/tags)
+[refresh.sh](https://github.com/WSU-kduncan/f24cicd-RecycledDrit/blob/main/deployment/refresh.sh)
+[hooks.json](https://github.com/WSU-kduncan/f24cicd-RecycledDrit/blob/main/deployment/hooks.json)
+[Webhook.service](https://github.com/WSU-kduncan/f24cicd-RecycledDrit/blob/main/deployment/webhook.service-copy)
